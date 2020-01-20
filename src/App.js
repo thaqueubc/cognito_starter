@@ -6,11 +6,13 @@ import Home from './components/Home';
 import Register from './components/auth/Register';
 import Welcome from './components/auth/Welcome';
 import LogIn from './components/auth/LogIn';
+import { Auth } from 'aws-amplify';
 
 class App extends Component {
   state = {
     isAuth : false,
-    user : null
+    user : null,
+    checkingAuth : true
   }
 
   authenticateUser = authenticated => {
@@ -20,6 +22,22 @@ class App extends Component {
   setAuthUser = user => {
     this.setState({ user : user });
   }
+
+  
+  async componentDidMount(){
+      try{
+        const session = await Auth.currentSession();
+        this.authenticateUser(true);
+        console.log(session);
+        const user = await Auth.currentAuthenticatedUser();
+        this.setAuthUser(user);
+      }catch(error){
+          console.log(error)
+      }
+
+      this.setState({checkingAuth : false})
+  }
+
   render() {
     const authProps = {
       isAuth : this.state.isAuth,
@@ -29,6 +47,7 @@ class App extends Component {
     }
 
     return (
+      !this.state.checkingAuth  && 
       <div className="App">
         <Router>
           <div>
