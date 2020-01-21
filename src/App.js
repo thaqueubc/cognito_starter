@@ -7,6 +7,8 @@ import Register from './components/auth/Register';
 import Welcome from './components/auth/Welcome';
 import LogIn from './components/auth/LogIn';
 import { Auth } from 'aws-amplify';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ForgotPasswordSubmit from './components/auth/ForgotPasswordSubmit';
 
 class App extends Component {
   state = {
@@ -57,6 +59,9 @@ class App extends Component {
               <Route exact path="/register" render = {(props) => <Register  {...props}  auth = {authProps}/>} />
               <Route exact path="/welcome" render = {(props) => <Welcome  {...props}  auth = {authProps}/>} />
               <Route exact path="/login" render = {(props) => <LogIn  {...props}  auth = {authProps}/>}/>
+
+              <Route exact path="/forgotpassword" render = {(props) => <ForgotPassword  {...props}  auth = {authProps}/>}/>
+              <Route exact path="/forgotpasswordsubmit" render = {(props) => <ForgotPasswordSubmit  {...props}  auth = {authProps}/>}/>
             </Switch>
           </div>
         </Router>

@@ -3,13 +3,16 @@ import FormErrors from "../FormErrors";
 import Validate from "../util/Validation";
 import {Auth} from "aws-amplify";
 
-class LogIn extends Component {
+class ForgotPasswordSubmit extends Component {
   state = {
-    username: "",
+    verificationcode : "",
+     email: "",
     password: "",
+    confirmpassword : "",
     errors: {
       blankfield: false,
-      cognito : null
+      cognito : null,
+      matchedpassword : " "
     }
   };
 
@@ -36,11 +39,18 @@ class LogIn extends Component {
     }else{
     //Integrate Cognito here on valid form submission
     try{
-      const user = await Auth.signIn(this.state.username, this.state.password)
-      console.log(user);
-      this.props.auth.authenticateUser(true);
-      this.props.auth.setAuthUser(user);
-      this.props.history.push("/");
+    //   await Auth.signIn(this.state.username, this.state.password)
+    //   console.log(user);
+    //   this.props.auth.authenticateUser(true);
+    //   this.props.auth.setAuthUser(user);
+    //   this.props.history.push("/");
+    await Auth.forgotPasswordSubmit(
+        this.state.email,
+        this.state.verificationcode,
+        this.state.password
+    );
+    this.props.history.push("/changepasswordconfirmation");
+    
   }catch(error){
       let err = null;
       !error.message ? err = {"message" : error} : err=error ;
@@ -74,9 +84,9 @@ class LogIn extends Component {
                 <input 
                   className="input" 
                   type="text"
-                  id="username"
-                  placeholder="Enter username or email"
-                  value={this.state.username}
+                  id="verificationcode"
+                  placeholder="Enter your code"
+                  value={this.state.verificationcode}
                   onChange={this.onInputChange}
                 />
                 <span className="icon is-small is-left">
@@ -88,10 +98,40 @@ class LogIn extends Component {
               <p className="control has-icons-left">
                 <input 
                   className="input" 
+                  type="email"
+                  id="email"
+                  placeholder="Enter email"
+                  value={this.state.email}
+                  onChange={this.onInputChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-envelope"></i>
+                </span>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control has-icons-left">
+                <input 
+                  className="input" 
                   type="password"
                   id="password"
-                  placeholder="Password"
+                  placeholder="New Password"
                   value={this.state.password}
+                  onChange={this.onInputChange}
+                />
+                <span className="icon is-small is-left">
+                  <i className="fas fa-lock"></i>
+                </span>
+              </p>
+            </div>
+            <div className="field">
+              <p className="control has-icons-left">
+                <input 
+                  className="input" 
+                  type="password"
+                  id="confirmpassword"
+                  placeholder="Confirm Password"
+                  value={this.state.confirmpassword}
                   onChange={this.onInputChange}
                 />
                 <span className="icon is-small is-left">
@@ -107,7 +147,7 @@ class LogIn extends Component {
             <div className="field">
               <p className="control">
                 <button className="button is-success">
-                  Login
+                  Reset Password
                 </button>
               </p>
             </div>
@@ -118,4 +158,4 @@ class LogIn extends Component {
   }
 }
 
-export default LogIn;
+export default ForgotPasswordSubmit;
